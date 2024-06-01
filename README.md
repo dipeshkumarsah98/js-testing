@@ -1,6 +1,6 @@
 # Mastering JavaScript Unit Testing
 
-This repository contains all of the examples and exercises for my JavaScript testing course.
+This repository contains all of the examples and exercises for larning JavaScript testing .
 
 - Understand the fundamentals of unit testing and its significance in JavaScript development.
 - Master the setup and usage of Vitest for effective JavaScript testing.
