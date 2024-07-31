@@ -1,5 +1,12 @@
 import { it, describe, expect } from "vitest";
-import { calculateDiscount, getCoupons, validateUserInput } from "../src/core";
+import {
+  calculateDiscount,
+  canDrive,
+  getCoupons,
+  isPriceInRange,
+  isValidUsername,
+  validateUserInput,
+} from "../src/core";
 
 describe("core", () => {
   it("should not return empty array", () => {
@@ -30,6 +37,7 @@ describe("calculateDiscount", () => {
   it("should return discounted price if given valid code", () => {
     const result = calculateDiscount(100, "SAVE10");
     expect(result).toBe(90);
+    expect(calculateDiscount(100, "SAVE20")).toBe(80);
   });
 
   it("should handle non-numeric input", () => {
@@ -41,7 +49,7 @@ describe("calculateDiscount", () => {
   });
 
   it("should handle non-string discount code", () => {
-    expect(calculateDiscount(-10, 10)).toMatch(/invalid/i); // regular expression to search for contain
+    expect(calculateDiscount(10, 10)).toMatch(/invalid/i); // regular expression to search for contain
   });
 });
 
@@ -67,5 +75,61 @@ describe("validateUserInput", () => {
   it("should return error if both username and age is invalid", () => {
     expect(validateUserInput("", 0)).toMatch(/invalid username/i);
     expect(validateUserInput("", 0)).toMatch(/invalid age/i);
+  });
+});
+
+describe("isPriceInRange", () => {
+  it("should return false when the price is outside the range", () => {
+    expect(isPriceInRange(-100, 0, 100)).toBe(false);
+    expect(isPriceInRange(200, 0, 100)).toBe(false);
+  });
+
+  it("should return true when the price is equal to the min or to the max", () => {
+    expect(isPriceInRange(0, 0, 100)).toBe(true);
+    expect(isPriceInRange(100, 0, 100)).toBe(true);
+  });
+
+  it("should return true when the price is with in the range", () => {
+    expect(isPriceInRange(20, 0, 100)).toBe(true);
+  });
+});
+
+describe("isValidUsername", () => {
+  it("should return true if username is valid", () => {
+    expect(isValidUsername("dipesh")).toBe(true);
+  });
+
+  it("should return false if username is too short", () => {
+    expect(isValidUsername("Dip")).toBe(false);
+  });
+
+  it("should return false if username is too long", () => {
+    expect(isValidUsername("Dip".repeat(20))).toBe(false);
+  });
+
+  it("should return false for invalid input type", () => {
+    expect(isValidUsername(null)).toBe(false);
+    expect(isValidUsername(undefined)).toBe(false);
+    expect(isValidUsername(1)).toBe(false);
+  });
+});
+
+describe("carDrive", () => {
+  it("should return error if invalid country code is provided", () => {
+    expect(canDrive(16, "USA")).toMatch(/invalid/i);
+  });
+
+  it("should return true if valid age and country code is provided", () => {
+    expect(canDrive(16, "US")).toBe(true);
+    expect(canDrive(17, "UK")).toBe(true);
+  });
+
+  it("should return false if invalid age and country code is provided", () => {
+    expect(canDrive(12, "US")).toBe(false);
+    expect(canDrive(10, "UK")).toBe(false);
+  });
+
+  it("should return error if invalid age data value is provided", () => {
+    expect(canDrive("12", "US")).toMatch(/invalid/i);
   });
 });

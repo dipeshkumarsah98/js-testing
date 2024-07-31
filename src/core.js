@@ -55,11 +55,15 @@ export function isValidUsername(username) {
   const minLength = 5;
   const maxLength = 15;
 
+  if (!username) return false;
+
   return username.length >= minLength && username.length <= maxLength;
 }
 
 // Exercise: Boundary testing
 export function canDrive(age, countryCode) {
+  if (typeof age !== "number") return "Invalid country code";
+
   const legalDrivingAge = {
     US: 16,
     UK: 17,
