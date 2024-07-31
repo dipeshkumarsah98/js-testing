@@ -79,19 +79,18 @@ describe("validateUserInput", () => {
 });
 
 describe("isPriceInRange", () => {
-  it("should return false when the price is outside the range", () => {
-    expect(isPriceInRange(-100, 0, 100)).toBe(false);
-    expect(isPriceInRange(200, 0, 100)).toBe(false);
-  });
-
-  it("should return true when the price is equal to the min or to the max", () => {
-    expect(isPriceInRange(0, 0, 100)).toBe(true);
-    expect(isPriceInRange(100, 0, 100)).toBe(true);
-  });
-
-  it("should return true when the price is with in the range", () => {
-    expect(isPriceInRange(20, 0, 100)).toBe(true);
-  });
+  // Parameterized test
+  it.each([
+    { price: -100, min: 0, max: 100, result: false },
+    { price: 200, min: 0, max: 100, result: false },
+    { price: 200, min: 0, max: 300, result: true },
+    { price: 0, min: 0, max: 300, result: true },
+  ])(
+    "should return $result when price is $price and range is $min to $max",
+    ({ max, min, price, result }) => {
+      expect(isPriceInRange(price, min, max)).toBe(result);
+    }
+  );
 });
 
 describe("isValidUsername", () => {
@@ -115,6 +114,18 @@ describe("isValidUsername", () => {
 });
 
 describe("carDrive", () => {
+  // Parameterized tests
+  it.each([
+    { age: 15, country: "US", result: false },
+    { age: 16, country: "US", result: true },
+    { age: 17, country: "US", result: true },
+    { age: 15, country: "UK", result: false },
+    { age: 17, country: "UK", result: true },
+    { age: 18, country: "UK", result: true },
+  ])("should return $result for $age, $country", ({ age, country, result }) => {
+    expect(canDrive(age, country)).toBe(result);
+  });
+
   it("should return error if invalid country code is provided", () => {
     expect(canDrive(16, "USA")).toMatch(/invalid/i);
   });
