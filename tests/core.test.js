@@ -1,10 +1,20 @@
-import { it, describe, expect } from "vitest";
+import {
+  it,
+  describe,
+  expect,
+  beforeEach,
+  beforeAll,
+  afterAll,
+  afterEach,
+} from "vitest";
 import {
   calculateDiscount,
   canDrive,
+  fetchData,
   getCoupons,
   isPriceInRange,
   isValidUsername,
+  Stack,
   validateUserInput,
 } from "../src/core";
 
@@ -142,5 +152,101 @@ describe("carDrive", () => {
 
   it("should return error if invalid age data value is provided", () => {
     expect(canDrive("12", "US")).toMatch(/invalid/i);
+  });
+});
+
+describe("fetchData", () => {
+  // Testing asynchronous code
+  it("should return a promise that will resolve to an array of numbers", async () => {
+    try {
+      const result = await fetchData();
+      expect(Array.isArray(result)).toBe(true);
+      expect(result.length).toBeGreaterThan(0);
+    } catch (error) {
+      expect(error).toHaveProperty("reason");
+      expect(error.reason).toMatch(/fail/i);
+    }
+  });
+});
+
+describe("test suite", () => {
+  beforeAll(() => {
+    console.log("Before all called");
+  });
+  beforeEach(() => {
+    console.log("Before reach called");
+  });
+
+  afterAll(() => {
+    console.log("after all called");
+  });
+  afterEach(() => {
+    console.log("after reach called");
+  });
+
+  it("test case 1", () => {});
+
+  it("test case 2", () => {});
+});
+
+describe("stack", () => {
+  let stack;
+
+  // it will be run for each it block
+  beforeEach(() => {
+    stack = new Stack();
+  });
+
+  it("push should add an item to the stack", () => {
+    stack.push(1);
+    expect(stack.size()).toBe(1);
+  });
+
+  it("pop should remove and return the top item from the stack", () => {
+    stack.push(1);
+    stack.push(2);
+
+    expect(stack.pop()).toBe(2);
+    expect(stack.size()).toBe(1);
+  });
+
+  it("pop should throw an error if stack is empty", () => {
+    expect(() => stack.pop()).toThrow(/empty/i);
+  });
+
+  it("peek should return the top item from the stack without removing it", () => {
+    stack.push(1);
+    stack.push(2);
+
+    expect(stack.peek()).toBe(2);
+    expect(stack.size()).toBe(2);
+  });
+
+  it("peek should throw an error if stack is empty", () => {
+    expect(() => stack.peek()).toThrow(/empty/i);
+  });
+
+  it("isEmpty should return true if stack is empty", () => {
+    expect(stack.isEmpty()).toBe(true);
+  });
+
+  it("isEmpty should return false if stack is not empty", () => {
+    stack.push(1);
+    expect(stack.isEmpty()).toBe(false);
+  });
+
+  it("size should return items in a stack", () => {
+    stack.push(1);
+    stack.push(2);
+    stack.push(3);
+    expect(stack.size()).toBe(3);
+  });
+
+  it("clear should empty the stack", () => {
+    stack.push(1);
+    stack.push(2);
+    stack.push(3);
+    stack.clear();
+    expect(stack.isEmpty()).toBe(true);
   });
 });
